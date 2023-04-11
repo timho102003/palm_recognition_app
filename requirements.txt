@@ -7,4 +7,5 @@ pinecone_client==2.2.1
 PyYAML==6.0
 rembg==2.0.32
 streamlit==1.21.0
+torch==2.0.0
 torchvision==0.15.0
