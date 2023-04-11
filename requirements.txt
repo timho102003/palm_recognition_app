@@ -3,7 +3,6 @@ numpy==1.23.5
 onnxruntime==1.14.1
 opencv_contrib_python==4.7.0.72
 Pillow==9.5.0
-pinecone==0.1.0
 pinecone_client==2.2.1
 PyYAML==6.0
 rembg==2.0.32
