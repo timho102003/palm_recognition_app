@@ -153,7 +153,7 @@ def mp_points_to_np(point_list: List, width: float, height: float) -> np.ndarray
     return points
 
 
-def remove_bg(_image: Image, bg_color: Tuple = (255, 255, 255), ratio=1.0):
+def remove_bg(image: Image, bg_color: Tuple = (255, 255, 255), ratio=1.0):
     rm_bg_img = remove(image)
     # Create a new image object with a white background
     background = Image.new("RGB", rm_bg_img.size, bg_color)
@@ -226,7 +226,7 @@ if __name__ == "__main__":
     col1.image(image)
 
     start = time.time()
-    rm_bg = remove_bg(_image=image)
+    rm_bg = remove_bg(image=image)
     end = time.time()
     col2.write("Remove Background")
     col2.caption("elapse time: {:.3f} ms".format((end - start) * 1000))
