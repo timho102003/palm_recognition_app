@@ -1,0 +1,33 @@
+trainval:
+  train_csv: "./data/trainval.csv"
+  val_csv: "./data/val.csv"
+  test_csv: "./data/test.csv"
+  mlflow: "local"
+  experiment_name: "palmar_exp"
+  is_validate: false
+  log_interval: 10
+  gpu_type: "cuda"
+  batchsize: 64
+  n_worker: 4
+  embedding_size: 512
+  net_depth: 50
+  drop_ratio: 0.6
+  pretrained: "model_mobilefacenet.pth"
+  net_mode: "mobilefacenet"
+  loss_type: "CrossEntropyLoss"
+  epoch: 20
+  opt: "SGD"
+  opt_params:
+    lr: 0.001
+    momentum: 0.9
+    weight_decay: 0.0005
+  lr_sched: "MultiStepLR"
+  lr_sched_params:
+    milestones: [12, 15, 18]
+    gamma: 0.1
+  img_resize: [240, 240]
+  img_crop: [224, 224]
+  img_rflip_p: 0.5
+  img_vflip_p: 0.5
+  img_mean: [0.5, 0.5, 0.5]
+  img_std: [0.5, 0.5, 0.5]
