@@ -1,4 +1,5 @@
 streamlit:
+  data_fld: "assets"
   model: "palm_recognition.onnx"
   img_mean: [0.5, 0.5, 0.5]
   img_std: [0.5, 0.5, 0.5]
