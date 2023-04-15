@@ -9,3 +9,4 @@ rembg==2.0.32
 streamlit==1.21.0
 torch
 torchvision
+streamlit-extras
