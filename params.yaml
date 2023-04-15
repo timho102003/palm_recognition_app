@@ -2,4 +2,4 @@ streamlit:
   model: "palm_recognition.onnx"
   img_mean: [0.5, 0.5, 0.5]
   img_std: [0.5, 0.5, 0.5]
-  img_crop: [224, 224]
+  img_crop: [112, 112]
