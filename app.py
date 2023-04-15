@@ -200,6 +200,7 @@ def to_numpy(tensor):
 def feature_extract(img):
     test_transform = T.Compose(
         [
+            T.Resize(PARAMS["img_crop"]),
             T.CenterCrop(PARAMS["img_crop"]),
             T.ToTensor(),
             T.Normalize(mean=PARAMS["img_mean"], std=PARAMS["img_std"]),
