@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="Instruction",
     page_icon="👋",
 )
-st.session_state["SUPER"] = True
+st.session_state["SUPER"] = False
 
 st.write("# Palm Recognition App! 👋")
 
