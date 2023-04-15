@@ -182,8 +182,9 @@ def normalize_img(image: Image, points: np.ndarray):
     x_min, y_min = rot_points.min(axis=0)
     x_max, y_max = rot_points.max(axis=0)
     r_width, r_height = rotated_image.size
+    palm_but_y = rot_points[0, 1] 
     x_min = max(0, x_min - 100)
-    y_min = max(0, y_min - 100)
+    y_min = max(max(0, y_min - 100), palm_but_y)
     x_max = min(r_width, x_max + 100)
     y_max = min(r_height, y_max + 100)
     crop_box = (x_min, y_min, x_max, y_max)
