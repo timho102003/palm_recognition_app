@@ -3,6 +3,10 @@ from utils import center_image
 from streamlit_extras.customize_running import center_running
 from streamlit_extras.stateful_button import button
 
+st.set_page_config(page_title="Feature DB Management")
+st.markdown("# Manage Feature DB")
+st.divider()
+
 if "SUPER" not in list(st.session_state.keys()):
     center_running()
 else:
