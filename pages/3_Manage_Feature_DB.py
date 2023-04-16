@@ -8,33 +8,34 @@ if "SUPER" not in list(st.session_state.keys()):
 else:
     if st.session_state["SUPER"]:
         st.write("Delete User:")
-        text_input = st.text_input(
+        username = st.text_input(
                     "Enter User ID 👇",
                     label_visibility="visible",
                     disabled=False,
                     placeholder="YOUR-ID",
                 )
-        if text_input:
+        if username:
             isexist_check = len(st.session_state["index"].fetch(
-                    ids=[f"streamlit_user.{text_input.lower()}"]
+                    ids=[f"streamlit_user.{username.lower()}"]
                 )["vectors"])
             if isexist_check:
-                st.success(f"The user {text_input} is exist")
+                st.success(f"The user {username} is exist")
                 if button("Delete User", key="deleteUser"):
                     if button("Go Ahead", key="doublecheck"):
                         try:
-                            st.session_state.delete(ids=[f"streamlit_user.{text_input.lower()}"], namespace='')
-                            isexist_check_2 = st.session_state["index"].fetch(
-                                ids=[f"streamlit_user.{text_input.lower()}"]
-                            )
+                            st.session_state["index"].delete(ids=[f"streamlit_user.{username.lower()}"], namespace='')
+                            isexist_check_2 = len(st.session_state["index"].fetch(ids=[f"streamlit_user.{username.lower()}"])["vectors"])
+                            st.write(isexist_check_2)
                             if isexist_check_2:
-                                st.success("Successfully delete user {text_input}")
-                            else:
                                 st.error("Something went wrong when deleting user!!!")
-                        except:
+                            else:
+                                st.success("Successfully delete user {username}")
+
+                        except Exception as e:
+                            st.error(e)
                             st.error("Something went wrong when deleting user!!!")
             else:
-                st.error(f"The user {text_input} does not exist, please check your username input")
+                st.error(f"The user {username} does not exist, please check your username input")
     else:
         st.error("You have to be a superuser to manage the feature database!")
         center_image("assets/sad_face.png")
