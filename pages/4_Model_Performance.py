@@ -15,6 +15,7 @@ def load_raw_df(assets="./assets/raw_results.csv"):
 
 perf_table = load_performance()
 raw_table = load_raw_df()
+st.write("FPR @ 0.01: TPR=99.898%")
 st.area_chart(perf_table, x="Threshold", y=["TPR", "FPR"], use_container_width=True)
 df_exp_obj = dataframe_explorer(raw_table, case=False)
 st.dataframe(df_exp_obj, use_container_width=True)
