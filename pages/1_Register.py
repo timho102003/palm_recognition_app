@@ -14,7 +14,7 @@ info_string = """
     Please follow the rules below when register:
     1. Make sure there is sufficient light when taking the image.
     2. Place your left palm facing up and spread your fingers.
-    3. Ensure that the image is not blurry.
+    3. Ensure that the image is not blurry or cover by your phone shadow.
 """
 
 st.info(info_string)

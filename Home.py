@@ -22,8 +22,8 @@ with r1_c1:
         """
         ### User Guide:
         1. Register your `palm` in the Register Tab
-        - Currently, we recommend to use your `left` hand
-        2. Start recognize your identity!
+        2. Currently, we recommend to use your `left` hand
+        3. Start recognize your identity!
     """
     )
 
