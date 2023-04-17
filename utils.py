@@ -160,7 +160,8 @@ def feature_extract(img):
     test_transform = T.Compose(
         [
             T.Resize(st.session_state["PARAMS"]["img_crop"]),
-            T.CenterCrop(st.session_state["PARAMS"]["img_crop"]),
+            # T.CenterCrop(st.session_state["PARAMS"]["img_crop"]),
+            T.Grayscale(num_output_channels=3),
             T.ToTensor(),
             T.Normalize(mean=st.session_state["PARAMS"]["img_mean"], std=st.session_state["PARAMS"]["img_std"]),
         ]
