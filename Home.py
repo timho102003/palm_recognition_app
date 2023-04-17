@@ -1,3 +1,4 @@
+import os, ast
 import yaml
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
@@ -9,7 +10,6 @@ st.set_page_config(
     page_title="Instruction",
     page_icon="👋",
 )
-st.session_state["SUPER"] = False
 
 st.write("# Palm Recognition App! 👋")
 
@@ -56,3 +56,40 @@ with info_col1:
     st.metric(label="Registered Users", 
               value=f'{st.session_state["user_tot_current"]} Users', 
               delta=str(st.session_state["DELTA"]))
+    
+with st.sidebar:
+    st.divider()
+
+    super_user = ast.literal_eval(os.environ["superuser"])
+    username = st.text_input(
+                    "Enter SuperUser Name 👇",
+                    label_visibility="visible",
+                    disabled=False,
+                    placeholder="SUPERUSER-ID",
+                )
+    password = st.text_input(
+                    "Enter SuperUser Password 👇",
+                    label_visibility="visible",
+                    disabled=False,
+                    placeholder="SUPERUSER-PW",
+                    type="password"
+                )
+
+    if username and password:
+        if username in super_user.keys():
+            if password != super_user[username]:
+                st.error("Incorrect Password")
+        else:
+            st.error("Incorrect username")
+    sb_c1, sb_c2 = st.columns([0.2, 0.5])
+    with sb_c1:
+        is_login = st.button("LOGIN") 
+    with sb_c2:
+        is_logout = st.button("LOGOUT")
+    if is_login:
+        os.environ["SUPER"] = "True"
+        st.success("Login as SUPERUSER Successfully!!!")
+    if is_logout:
+        os.environ["SUPER"] = "False"
+        st.success("Logout Successfully!!!")
+    
