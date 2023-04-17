@@ -1,3 +1,4 @@
+import os
 import time
 from PIL import Image
 import streamlit as st
