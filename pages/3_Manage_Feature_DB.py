@@ -27,11 +27,10 @@ if os.environ["SUPER"] == "True":
                     try:
                         st.session_state["index"].delete(ids=[f"streamlit_user.{username.lower()}"], namespace='')
                         isexist_check_2 = len(st.session_state["index"].fetch(ids=[f"streamlit_user.{username.lower()}"])["vectors"])
-                        st.write(isexist_check_2)
                         if isexist_check_2:
                             st.error("Something went wrong when deleting user!!!")
                         else:
-                            st.success("Successfully delete user {username}")
+                            st.success(f"Successfully delete user {username}")
 
                     except Exception as e:
                         st.error(e)
