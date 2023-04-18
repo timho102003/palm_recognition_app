@@ -61,35 +61,40 @@ with st.sidebar:
     st.divider()
 
     super_user = ast.literal_eval(os.environ["superuser"])
-    username = st.text_input(
-                    "Enter SuperUser Name 👇",
-                    label_visibility="visible",
-                    disabled=False,
-                    placeholder="SUPERUSER-ID",
-                )
-    password = st.text_input(
-                    "Enter SuperUser Password 👇",
-                    label_visibility="visible",
-                    disabled=False,
-                    placeholder="SUPERUSER-PW",
-                    type="password"
-                )
 
-    if username and password:
-        if username in super_user.keys():
-            if password != super_user[username]:
-                st.error("Incorrect Password")
-        else:
-            st.error("Incorrect username")
-    sb_c1, sb_c2 = st.columns([0.2, 0.5])
-    with sb_c1:
+    if os.environ["SUPER"] == "False":
+        username = st.text_input(
+                        "Enter SuperUser Name 👇",
+                        label_visibility="visible",
+                        disabled=False,
+                        placeholder="SUPERUSER-ID",
+                    )
+        password = st.text_input(
+                        "Enter SuperUser Password 👇",
+                        label_visibility="visible",
+                        disabled=False,
+                        placeholder="SUPERUSER-PW",
+                        type="password"
+                    )
         is_login = st.button("LOGIN") 
-    with sb_c2:
+        if is_login:
+            if username and password:
+                if username in super_user.keys():
+                    if password != super_user[username]:
+                        st.error("Incorrect Password")
+                    else:
+                        os.environ["SUPER"] = "True"
+                        st.success("Login as SUPERUSER Successfully!!!")
+                        switch_page("home")
+                else:
+                    st.error("Incorrect username")
+            else:
+                st.error("Please fill in both username and password!")
+    else:
+        st.info("Currently Login as a SUPERMAN")
         is_logout = st.button("LOGOUT")
-    if is_login:
-        os.environ["SUPER"] = "True"
-        st.success("Login as SUPERUSER Successfully!!!")
-    if is_logout:
-        os.environ["SUPER"] = "False"
-        st.success("Logout Successfully!!!")
+        if is_logout:
+            os.environ["SUPER"] = "False"
+            st.success("Logout Successfully!!!")
+            switch_page("home")
     
