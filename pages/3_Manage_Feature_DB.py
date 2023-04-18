@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 from utils import center_image, cache_index_users
 from streamlit_extras.stateful_button import button
+from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(page_title="Feature DB Management")
 st.markdown("# Manage Feature DB")
@@ -21,6 +22,7 @@ if os.environ["SUPER"] == "True":
                 try:
                     st.session_state["index"].delete(ids=options, namespace='')
                     st.success(f"Successfully delete user {options}")
+                    switch_page("manage_feature_db")
                 except Exception as e:
                     st.error(e)
                     st.error("Something went wrong when deleting user!!!")
