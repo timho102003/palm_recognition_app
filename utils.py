@@ -78,7 +78,7 @@ def draw(img: np.ndarray, hand_landmarks_list: np.ndarray, ratio=1.0) -> np.ndar
         cv2.circle(
             frameCopy,
             (x_pt, y_pt),
-            15,
+            5,
             (0, 255, 255),
             thickness=-1,
             lineType=cv2.FILLED,
@@ -88,7 +88,7 @@ def draw(img: np.ndarray, hand_landmarks_list: np.ndarray, ratio=1.0) -> np.ndar
             "{}".format(idx),
             (x_pt, y_pt),
             cv2.FONT_HERSHEY_SIMPLEX,
-            2,
+            1,
             (0, 0, 255),
             6,
             lineType=cv2.LINE_AA,
@@ -141,10 +141,10 @@ def normalize_img(image: Image, points: np.ndarray):
     x_max, y_max = rot_points.max(axis=0)
     r_width, r_height = rotated_image.size
     palm_but_y = rot_points[0, 1] 
-    x_min = max(0, x_min - 100)
-    y_min = max(max(0, y_min - 100), palm_but_y)
-    x_max = min(r_width, x_max + 100)
-    y_max = min(r_height, y_max + 100)
+    x_min = max(0, x_min - 5)
+    y_min = max(max(0, y_min - 5), palm_but_y)
+    x_max = min(r_width, x_max + 5)
+    y_max = min(r_height, y_max + 5)
     crop_box = (x_min, y_min, x_max, y_max)
     cropped_image = rotated_image.crop(crop_box)
     return rot_angle, cropped_image
