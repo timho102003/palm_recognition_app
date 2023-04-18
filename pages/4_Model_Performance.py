@@ -6,12 +6,16 @@ st.set_page_config(page_title="Model Performance")
 st.markdown("# Model Performance Detail")
 st.divider()
 
+
 @st.cache_data
 def load_performance(assets="./assets/streamlit_model_perf.csv"):
     return pd.read_csv(assets)
+
+
 @st.cache_data
 def load_raw_df(assets="./assets/raw_results.csv"):
     return pd.read_csv(assets)
+
 
 perf_table = load_performance()
 raw_table = load_raw_df()

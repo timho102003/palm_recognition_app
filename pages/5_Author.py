@@ -43,7 +43,7 @@ with row2_col1:
 
 with row2_col2:
     st.markdown(
-        '''
+        """
         ### Tim K.C, Ho
         #### Experience:   
         **Delta Research Center:**    
@@ -53,10 +53,10 @@ with row2_col2:
         **Delta Research Center:**    
         - R&D Computer Vision Engineer  
         - 2019.01 - 2022.06  
-        '''
+        """
     )
 
-row3_col1, row3_col2= st.columns(2)
+row3_col1, row3_col2 = st.columns(2)
 
 with row3_col1:
     card(
@@ -74,7 +74,7 @@ with row3_col2:
         url="https://ieeexplore.ieee.org/document/8297179",
     )
 
-row4_col1, row4_col2= st.columns(2)
+row4_col1, row4_col2 = st.columns(2)
 
 with row4_col1:
     card(
@@ -92,7 +92,7 @@ with row4_col2:
         url="https://dagshub.com/timho102003/pytorch-image-classification.git",
     )
 
-row5_col1, row5_col2= st.columns(2)
+row5_col1, row5_col2 = st.columns(2)
 
 with row5_col1:
     card(
@@ -110,7 +110,7 @@ with row5_col2:
         url="https://github.com/timho102003/FaceDetection",
     )
 
-row6_col1, row6_col2= st.columns(2)
+row6_col1, row6_col2 = st.columns(2)
 
 with row6_col1:
     card(
@@ -128,7 +128,7 @@ with row6_col2:
         url="https://dagshub.com/blog/how-to-use-pycaret-with-dagshub/",
     )
 
-row7_col1, row7_col2= st.columns(2)
+row7_col1, row7_col2 = st.columns(2)
 
 with row7_col1:
     card(

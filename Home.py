@@ -1,10 +1,13 @@
-import os, ast
-import yaml
-import streamlit as st
-from streamlit_extras.switch_page_button import switch_page
-from utils import load_keypoint_model, load_model, load_index, cache_user_cnt
+import ast
+import os
 
-#TODO: Future will change to connect a database to verify if is superuser
+import streamlit as st
+import yaml
+from streamlit_extras.switch_page_button import switch_page
+
+from utils import cache_user_cnt, load_index, load_keypoint_model, load_model
+
+# TODO: Future will change to connect a database to verify if is superuser
 
 st.set_page_config(
     page_title="Instruction",
@@ -48,15 +51,19 @@ with info_col2:
     st.success("Finish loading Palm Gallery", icon="🔥")
     st.session_state["model"] = load_model()
     st.success("Finish loading Palm Recognition Model", icon="🔥")
-    st.session_state["user_tot_current"] = st.session_state["index"].describe_index_stats()["total_vector_count"]
+    st.session_state["user_tot_current"] = st.session_state[
+        "index"
+    ].describe_index_stats()["total_vector_count"]
 
 with info_col1:
     cache_user_tot = cache_user_cnt()
     st.session_state["DELTA"] = st.session_state["user_tot_current"] - cache_user_tot
-    st.metric(label="Registered Users", 
-              value=f'{st.session_state["user_tot_current"]} Users', 
-              delta=str(st.session_state["DELTA"]))
-    
+    st.metric(
+        label="Registered Users",
+        value=f'{st.session_state["user_tot_current"]} Users',
+        delta=str(st.session_state["DELTA"]),
+    )
+
 with st.sidebar:
     st.divider()
 
@@ -64,19 +71,19 @@ with st.sidebar:
 
     if os.environ["SUPER"] == "False":
         username = st.text_input(
-                        "Enter SuperUser Name 👇",
-                        label_visibility="visible",
-                        disabled=False,
-                        placeholder="SUPERUSER-ID",
-                    )
+            "Enter SuperUser Name 👇",
+            label_visibility="visible",
+            disabled=False,
+            placeholder="SUPERUSER-ID",
+        )
         password = st.text_input(
-                        "Enter SuperUser Password 👇",
-                        label_visibility="visible",
-                        disabled=False,
-                        placeholder="SUPERUSER-PW",
-                        type="password"
-                    )
-        is_login = st.button("LOGIN") 
+            "Enter SuperUser Password 👇",
+            label_visibility="visible",
+            disabled=False,
+            placeholder="SUPERUSER-PW",
+            type="password",
+        )
+        is_login = st.button("LOGIN")
         if is_login:
             if username and password:
                 if username in super_user.keys():
@@ -97,4 +104,3 @@ with st.sidebar:
             os.environ["SUPER"] = "False"
             st.success("Logout Successfully!!!")
             switch_page("home")
-    

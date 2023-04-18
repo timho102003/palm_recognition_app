@@ -1,11 +1,12 @@
-import os
 import gc
+import os
 import time
-from PIL import Image
-import streamlit as st
 
+import streamlit as st
+from PIL import Image
 from streamlit_extras.switch_page_button import switch_page
-from utils import remove_bg, detect_keypoints, normalize_img, feature_extract
+
+from utils import detect_keypoints, feature_extract, normalize_img, remove_bg
 
 st.set_page_config(page_title="Palm Registration")
 st.markdown("# Registration")
@@ -31,7 +32,7 @@ with in_col2:
 if os.environ["SUPER"] == "True":
     col1, col2, col3, col4 = st.columns(4)
 else:
-    col1, col2= st.columns(2)
+    col1, col2 = st.columns(2)
 
 # imgfile = 0
 # if my_upload is not None:
@@ -61,7 +62,9 @@ if my_upload is not None:
     if keypoints is not None:
         if os.environ["SUPER"] == "True":
             col3.write("Keypoint Detection")
-            col3.caption("elapse time: {:.3f} ms".format((pt_det_end - pt_det_start) * 1000))
+            col3.caption(
+                "elapse time: {:.3f} ms".format((pt_det_end - pt_det_start) * 1000)
+            )
             col3.image(keypoint_plot)
         norm_start = time.time()
         rot_angle, norm_img = normalize_img(image=rm_bg, points=keypoints)
@@ -103,26 +106,30 @@ if my_upload is not None:
 
     if feature is not None:
         if os.environ["SUPER"] == "True":
-            st.info("Elapse Time: {:.2f} ms".format((end_ext - start_ext) * 1000), icon="🔥")
+            st.info(
+                "Elapse Time: {:.2f} ms".format((end_ext - start_ext) * 1000), icon="🔥"
+            )
         else:
-            tot_time_spend = (rm_bg_end - rm_bg_start) + \
-                             (pt_det_end - pt_det_start) + \
-                             (norm_end - norm_start) + \
-                             (end_ext - start_ext)
-            st.info("Total Process Time: {:.2f} ms".format(tot_time_spend * 1000), icon="🔥")
+            tot_time_spend = (
+                (rm_bg_end - rm_bg_start)
+                + (pt_det_end - pt_det_start)
+                + (norm_end - norm_start)
+                + (end_ext - start_ext)
+            )
+            st.info(
+                "Total Process Time: {:.2f} ms".format(tot_time_spend * 1000), icon="🔥"
+            )
 
         with st.expander("See Feature Values:"):
             st.json({"feature": feature[0].tolist()})
         text_input = st.text_input(
-                "Enter Your Name 👇",
-                label_visibility="visible",
-                disabled=False,
-                placeholder="YOUR-ID",
-            )
+            "Enter Your Name 👇",
+            label_visibility="visible",
+            disabled=False,
+            placeholder="YOUR-ID",
+        )
         if text_input:
-            st.write(
-                "Verify your name before pressing register button: ", text_input
-            )
+            st.write("Verify your name before pressing register button: ", text_input)
         button_clicked_register = st.button("Register")
         if button_clicked_register:
             isexist_check = st.session_state["index"].fetch(
@@ -141,7 +148,7 @@ if my_upload is not None:
                 st.success(f"User: {text_input}, Successfully Registered!!!!!")
             else:
                 st.error(f"User: {text_input}, Already Registered!!!!!")
-        
+
     else:
         st.error("Fail to extract features")
 

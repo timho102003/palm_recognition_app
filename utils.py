@@ -1,22 +1,23 @@
-import os
-import cv2
 import math
-import pinecone
-import onnxruntime
-import numpy as np
-from PIL import Image
-import mediapipe as mp
-import streamlit as st
-from rembg import remove
+import os
 from typing import List, Tuple
-from mediapipe.tasks import python
+
+import cv2
+import mediapipe as mp
+import numpy as np
+import onnxruntime
+import pinecone
+import streamlit as st
 import torchvision.transforms as T
+from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
+from PIL import Image
+from rembg import remove
 
 
 @st.cache_resource
 def load_keypoint_model(asset="hand_landmarker.task"):
-    asset = os.path.join(st.session_state["PARAMS"]["data_fld"], asset) 
+    asset = os.path.join(st.session_state["PARAMS"]["data_fld"], asset)
     base_options = python.BaseOptions(model_asset_path=asset)
     options = vision.HandLandmarkerOptions(base_options=base_options, num_hands=1)
     detector = vision.HandLandmarker.create_from_options(options)
@@ -25,7 +26,9 @@ def load_keypoint_model(asset="hand_landmarker.task"):
 
 @st.cache_resource
 def load_model():
-    asset = os.path.join(st.session_state["PARAMS"]["data_fld"], st.session_state["PARAMS"]["model"])
+    asset = os.path.join(
+        st.session_state["PARAMS"]["data_fld"], st.session_state["PARAMS"]["model"]
+    )
     model = onnxruntime.InferenceSession(asset)
     return model
 
@@ -36,27 +39,31 @@ def load_index():
     index = pinecone.Index(os.environ["index_collection_name"])
     return index
 
-@st.cache_data
-def cache_user_cnt():
-    user_tot = st.session_state["index"].describe_index_stats()["total_vector_count"]
-    return user_tot
 
 @st.cache_data
 def cache_user_cnt():
     user_tot = st.session_state["index"].describe_index_stats()["total_vector_count"]
     return user_tot
+
+
+@st.cache_data
+def cache_user_cnt():
+    user_tot = st.session_state["index"].describe_index_stats()["total_vector_count"]
+    return user_tot
+
 
 def cache_index_users():
     out = st.session_state["index"].query(
-                                            top_k=1000,
-                                            vector= [0] * 512, # embedding dimension
-                                            namespace='',
-                                            include_values=False
-                                        )
+        top_k=1000,
+        vector=[0] * 512,  # embedding dimension
+        namespace="",
+        include_values=False,
+    )
     reg_users = []
     for vec in out["matches"]:
         reg_users.append(vec["id"])
     return sorted(reg_users)
+
 
 def rotate_points(points, angle, center):
     theta = np.radians(angle)
@@ -152,7 +159,7 @@ def normalize_img(image: Image, points: np.ndarray):
     x_min, y_min = rot_points.min(axis=0)
     x_max, y_max = rot_points.max(axis=0)
     r_width, r_height = rotated_image.size
-    palm_but_y = rot_points[0, 1] 
+    palm_but_y = rot_points[0, 1]
     x_min = max(0, x_min - 5)
     y_min = max(max(0, y_min - 5), palm_but_y)
     x_max = min(r_width, x_max + 5)
@@ -175,7 +182,10 @@ def feature_extract(img):
             # T.CenterCrop(st.session_state["PARAMS"]["img_crop"]),
             T.Grayscale(num_output_channels=3),
             T.ToTensor(),
-            T.Normalize(mean=st.session_state["PARAMS"]["img_mean"], std=st.session_state["PARAMS"]["img_std"]),
+            T.Normalize(
+                mean=st.session_state["PARAMS"]["img_mean"],
+                std=st.session_state["PARAMS"]["img_std"],
+            ),
         ]
     )
     img = test_transform(img)
@@ -185,13 +195,14 @@ def feature_extract(img):
     onnx_out = ort_outs[0]
     return onnx_out
 
+
 def center_image(imgpath=""):
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.write(' ')
+        st.write(" ")
 
     with col2:
         st.image(imgpath)
 
     with col3:
-        st.write(' ')
+        st.write(" ")
