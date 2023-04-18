@@ -122,6 +122,12 @@ if my_upload is not None:
 
         with st.expander("See Feature Values:"):
             st.json({"feature": feature[0].tolist()})
+
+        if os.environ["SUPER"] == "True":
+            threshold = st.slider('Select the threshold', 0.0, 1.0, st.session_state["PARAMS"]["threshold"], 0.01)
+        else:
+            threshold = st.session_state["PARAMS"]["threshold"]
+
         button_clicked_identify = st.button("Identify")
         if button_clicked_identify:
             start = time.time()
@@ -132,9 +138,9 @@ if my_upload is not None:
                 st.write("Top 3 MetaData:")
                 st.json(response.to_dict())
             end = time.time()
-            pred = response["matches"][0]["metadata"]["label"]
+            pred = str(int(response["matches"][0]["metadata"]["label"]))
             score = response["matches"][0]["score"]
-            if (score + 1) / 2 < 0.8:
+            if (score + 1) / 2 < threshold:
                 pred = "unknown user"
             our_str = "Identity: {}, Sim-Score: {:.2f}, Elapse Time: {:.2f} ms".format(
                 pred.upper(), (score + 1) / 2, (end_ext - start_ext) * 1000
