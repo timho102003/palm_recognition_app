@@ -1,42 +1,29 @@
 import os
+import pandas as pd
 import streamlit as st
-from utils import center_image
-from streamlit_extras.customize_running import center_running
+from utils import center_image, cache_index_users
 from streamlit_extras.stateful_button import button
 
 st.set_page_config(page_title="Feature DB Management")
 st.markdown("# Manage Feature DB")
 st.divider()
 
-if os.environ["SUPER"] == "True":
-    st.write("Delete User:")
-    username = st.text_input(
-                "Enter User ID 👇",
-                label_visibility="visible",
-                disabled=False,
-                placeholder="YOUR-ID",
-            )
-    if username:
-        isexist_check = len(st.session_state["index"].fetch(
-                ids=[f"streamlit_user.{username.lower()}"]
-            )["vectors"])
-        if isexist_check:
-            st.success(f"The user {username} is exist")
-            if button("Delete User", key="deleteUser"):
-                if button("Go Ahead", key="doublecheck"):
-                    try:
-                        st.session_state["index"].delete(ids=[f"streamlit_user.{username.lower()}"], namespace='')
-                        isexist_check_2 = len(st.session_state["index"].fetch(ids=[f"streamlit_user.{username.lower()}"])["vectors"])
-                        if isexist_check_2:
-                            st.error("Something went wrong when deleting user!!!")
-                        else:
-                            st.success(f"Successfully delete user {username}")
 
-                    except Exception as e:
-                        st.error(e)
-                        st.error("Something went wrong when deleting user!!!")
-        else:
-            st.error(f"The user {username} does not exist, please check your username input")
+if os.environ["SUPER"] == "True":
+    st.session_state["register_users"] = cache_index_users()
+    options = st.multiselect(
+    'Which user to delete',
+    st.session_state["register_users"])
+    if options:
+        st.warning(f"Selected User: {options}")
+        if button("Delete User", key="deleteUser"):
+            if button("Go Ahead", key="doublecheck"):
+                try:
+                    st.session_state["index"].delete(ids=options, namespace='')
+                    st.success(f"Successfully delete user {options}")
+                except Exception as e:
+                    st.error(e)
+                    st.error("Something went wrong when deleting user!!!")
 else:
     st.error("You have to be a superuser to manage the feature database!")
     center_image("assets/sad_face.png")

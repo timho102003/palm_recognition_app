@@ -46,6 +46,18 @@ def cache_user_cnt():
     user_tot = st.session_state["index"].describe_index_stats()["total_vector_count"]
     return user_tot
 
+def cache_index_users():
+    out = st.session_state["index"].query(
+                                            top_k=1000,
+                                            vector= [0] * 512, # embedding dimension
+                                            namespace='',
+                                            include_values=False
+                                        )
+    reg_users = []
+    for vec in out["matches"]:
+        reg_users.append(vec["id"])
+    return sorted(reg_users)
+
 def rotate_points(points, angle, center):
     theta = np.radians(angle)
     c, s = np.cos(theta), np.sin(theta)
