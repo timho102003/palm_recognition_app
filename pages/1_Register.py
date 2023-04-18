@@ -147,6 +147,6 @@ if my_upload is not None:
 
 go_to_identify = st.button("Go to Identify")
 if go_to_identify:
-    del rm_bg, keypoint_plot, norm_img, keypoints, feature
+    del rm_bg, keypoint_plot, norm_img, keypoints, feature, image
     gc.collect()
     switch_page("identify")
