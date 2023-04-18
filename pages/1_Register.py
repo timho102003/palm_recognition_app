@@ -1,4 +1,5 @@
 import os
+import gc
 import time
 from PIL import Image
 import streamlit as st
@@ -146,4 +147,6 @@ if my_upload is not None:
 
 go_to_identify = st.button("Go to Identify")
 if go_to_identify:
+    del rm_bg, keypoint_plot, norm_img, keypoints, feature
+    gc.collect()
     switch_page("identify")
