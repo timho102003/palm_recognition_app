@@ -1,5 +1,5 @@
 import os
-
+import time
 import pandas as pd
 import streamlit as st
 from streamlit_extras.stateful_button import button
@@ -22,6 +22,7 @@ if os.environ["SUPER"] == "True":
                 try:
                     st.session_state["index"].delete(ids=options, namespace="")
                     st.success(f"Successfully delete user {options}")
+                    time.sleep(1)
                     switch_page("manage_feature_db")
                 except Exception as e:
                     st.error(e)
