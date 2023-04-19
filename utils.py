@@ -12,7 +12,7 @@ import torchvision.transforms as T
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from PIL import Image
-from rembg import remove
+from rembg import remove, new_session
 
 
 @st.cache_resource
@@ -126,12 +126,13 @@ def mp_points_to_np(point_list: List, width: float, height: float) -> np.ndarray
 
 @st.cache_data
 def remove_bg(_image: Image, bg_color: Tuple = (255, 255, 255), ratio=1.0):
-    rm_bg_img = remove(_image)
+    my_session = new_session(st.session_state["PARAMS"]["rmbg_model"])
+    rm_bg_img = remove(data=_image, session=my_session)  #, bgcolor=bg_color
     # Create a new image object with a white background
     background = Image.new("RGB", rm_bg_img.size, bg_color)
     # Paste the processed image onto the white background
     background.paste(rm_bg_img, (0, 0), rm_bg_img)
-    return background
+    return background #rm_bg_img
 
 @st.cache_data
 def normalize_img(image: Image, points: np.ndarray):
