@@ -5,7 +5,7 @@ import streamlit as st
 from PIL import Image
 from streamlit_extras.switch_page_button import switch_page
 
-from utils import detect_keypoints, feature_extract, normalize_img, remove_bg
+from utils import detect_keypoints, feature_extract, normalize_img, remove_bg, clear_cache
 
 st.set_page_config(page_title="Palm Identification")
 st.markdown("# Identification")
@@ -27,18 +27,12 @@ with in_col1:
     st.write("Identify Example (Left Hand)")
     st.image("assets/right_hand_contour.png")
 with in_col2:
-    my_upload = st.camera_input("Take a picture")
+    my_upload = st.camera_input("Take a picture", on_change=clear_cache)
 
 if os.environ["SUPER"] == "True":
     col1, col2, col3, col4 = st.columns(4)
 else:
     col1, col2 = st.columns(2)
-
-# imgfile = 0
-# if my_upload is not None:
-#     imgfile = my_upload
-# else:
-#     imgfile = "./palmar_example.jpg"
 
 if my_upload is not None:
     imgfile = my_upload
@@ -48,7 +42,7 @@ if my_upload is not None:
     col1.image(image)
 
     rm_bg_start = time.time()
-    rm_bg = remove_bg(image=image)
+    rm_bg = remove_bg(_image=image)
     rm_bg_end = time.time()
 
     if os.environ["SUPER"] == "True":
@@ -138,7 +132,12 @@ if my_upload is not None:
                 st.write("Top 3 MetaData:")
                 st.json(response.to_dict())
             end = time.time()
-            pred = str(int(response["matches"][0]["metadata"]["label"]))
+            if type(response["matches"][0]["metadata"]["label"]) == str:
+                pred = response["matches"][0]["metadata"]["label"]
+            elif isinstance(response["matches"][0]["metadata"]["label"], (int, float)):
+                pred = str(int(response["matches"][0]["metadata"]["label"]))
+            else:
+                pred = str(response["matches"][0]["metadata"]["label"])
             score = response["matches"][0]["score"]
             if (score + 1) / 2 < threshold:
                 pred = "unknown user"
@@ -149,6 +148,7 @@ if my_upload is not None:
                 st.warning(our_str, icon="🔥")
                 go_register = st.button("Go Register")
                 if go_register:
+                    clear_cache()
                     switch_page("register")
             else:
                 st.info(our_str, icon="🔥")

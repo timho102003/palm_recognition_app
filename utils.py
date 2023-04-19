@@ -46,12 +46,6 @@ def cache_user_cnt():
     return user_tot
 
 
-@st.cache_data
-def cache_user_cnt():
-    user_tot = st.session_state["index"].describe_index_stats()["total_vector_count"]
-    return user_tot
-
-
 def cache_index_users():
     out = st.session_state["index"].query(
         top_k=1000,
@@ -72,6 +66,7 @@ def rotate_points(points, angle, center):
     return np.dot(points - center, R) + center
 
 
+@st.cache_data
 def detect_keypoints(rm_bg):
     image_frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.asarray(rm_bg))
     detection_result = st.session_state["detector"].detect(image_frame)
@@ -86,7 +81,7 @@ def detect_keypoints(rm_bg):
         annotated_image = None
     return points, annotated_image
 
-
+@st.cache_data
 def draw(img: np.ndarray, hand_landmarks_list: np.ndarray, ratio=1.0) -> np.ndarray:
     frameCopy = img.copy()
     height, width, _ = img.shape
@@ -129,16 +124,16 @@ def mp_points_to_np(point_list: List, width: float, height: float) -> np.ndarray
         points[idx, 1] = int(hand_landmarks.y * height)
     return points
 
-
-def remove_bg(image: Image, bg_color: Tuple = (255, 255, 255), ratio=1.0):
-    rm_bg_img = remove(image)
+@st.cache_data
+def remove_bg(_image: Image, bg_color: Tuple = (255, 255, 255), ratio=1.0):
+    rm_bg_img = remove(_image)
     # Create a new image object with a white background
     background = Image.new("RGB", rm_bg_img.size, bg_color)
     # Paste the processed image onto the white background
     background.paste(rm_bg_img, (0, 0), rm_bg_img)
     return background
 
-
+@st.cache_data
 def normalize_img(image: Image, points: np.ndarray):
     width, height = image.size
     x1, y1 = points[9, 0], points[9, 1]
@@ -174,7 +169,7 @@ def to_numpy(tensor):
         tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
     )
 
-
+@st.cache_data
 def feature_extract(img):
     test_transform = T.Compose(
         [
@@ -195,14 +190,27 @@ def feature_extract(img):
     onnx_out = ort_outs[0]
     return onnx_out
 
-
-def center_image(imgpath=""):
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.write(" ")
-
-    with col2:
-        st.image(imgpath)
-
-    with col3:
-        st.write(" ")
+def clear_cache():
+    feature_extract.clear()
+    draw.clear()
+    normalize_img.clear()
+    remove_bg.clear()
+    detect_keypoints.clear()
+    # if "keypoints" in st.session_state:
+    #     st.session_state["keypoints"] = st.empty()
+    #     st.write("clear 0")
+    # if "keypoint_plots" in st.session_state:
+    #     st.session_state["keypoint_plots"] = st.empty()
+    #     st.write("clear 1")
+    # if "camera_image" in st.session_state:
+    #     st.session_state["camera_image"] = st.empty()
+    #     st.write("clear 2")
+    # if "rm_bg_image" in st.session_state:
+    #     st.session_state["rm_bg_image"] = st.empty()
+    #     st.write("clear 3")
+    # if "norm_image" in st.session_state:
+    #     st.session_state["norm_image"] = st.empty()
+    #     st.write("clear 4")
+    # if "current_feature" in st.session_state:
+    #     st.session_state["current_feature"] = st.empty()
+    #     st.write("clear 5")

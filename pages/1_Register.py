@@ -6,7 +6,7 @@ import streamlit as st
 from PIL import Image
 from streamlit_extras.switch_page_button import switch_page
 
-from utils import detect_keypoints, feature_extract, normalize_img, remove_bg
+from utils import detect_keypoints, feature_extract, normalize_img, remove_bg, clear_cache
 
 st.set_page_config(page_title="Palm Registration")
 st.markdown("# Registration")
@@ -27,7 +27,7 @@ with in_col1:
     st.write("Register Example (Left Hand)")
     st.image("assets/right_hand_contour.png")
 with in_col2:
-    my_upload = st.camera_input("Take a picture")
+    my_upload = st.camera_input("Take a picture", on_change=clear_cache)
 
 if os.environ["SUPER"] == "True":
     col1, col2, col3, col4 = st.columns(4)
@@ -48,7 +48,7 @@ if my_upload is not None:
     col1.image(image)
 
     rm_bg_start = time.time()
-    rm_bg = remove_bg(image=image)
+    rm_bg = remove_bg(_image=image)
     rm_bg_end = time.time()
 
     if os.environ["SUPER"] == "True":
@@ -154,6 +154,5 @@ if my_upload is not None:
 
 go_to_identify = st.button("Go to Identify")
 if go_to_identify:
-    del rm_bg, keypoint_plot, norm_img, keypoints, feature, image
-    gc.collect()
+    clear_cache()
     switch_page("identify")
