@@ -197,21 +197,12 @@ def clear_cache():
     normalize_img.clear()
     remove_bg.clear()
     detect_keypoints.clear()
-    # if "keypoints" in st.session_state:
-    #     st.session_state["keypoints"] = st.empty()
-    #     st.write("clear 0")
-    # if "keypoint_plots" in st.session_state:
-    #     st.session_state["keypoint_plots"] = st.empty()
-    #     st.write("clear 1")
-    # if "camera_image" in st.session_state:
-    #     st.session_state["camera_image"] = st.empty()
-    #     st.write("clear 2")
-    # if "rm_bg_image" in st.session_state:
-    #     st.session_state["rm_bg_image"] = st.empty()
-    #     st.write("clear 3")
-    # if "norm_image" in st.session_state:
-    #     st.session_state["norm_image"] = st.empty()
-    #     st.write("clear 4")
-    # if "current_feature" in st.session_state:
-    #     st.session_state["current_feature"] = st.empty()
-    #     st.write("clear 5")
+
+def check_load_status():
+    if "detector" not in st.session_state and \
+       "index" not in st.session_state and \
+       "model" not in st.session_state and \
+       "PARAMS" not in st.session_state:
+        return False
+    else:
+        return True
