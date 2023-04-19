@@ -5,7 +5,7 @@ import streamlit as st
 from streamlit_extras.stateful_button import button
 from streamlit_extras.switch_page_button import switch_page
 
-from utils import cache_index_users, center_image
+from utils import cache_index_users
 
 st.set_page_config(page_title="Feature DB Management")
 st.markdown("# Manage Feature DB")
@@ -28,4 +28,6 @@ if os.environ["SUPER"] == "True":
                     st.error("Something went wrong when deleting user!!!")
 else:
     st.error("You have to be a superuser to manage the feature database!")
-    center_image("assets/sad_face.png")
+    col1, col2, col3 = st.columns([0.3, 0.3, 0.3])
+    with col2:
+        st.image("assets/sad_face.png")
