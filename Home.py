@@ -14,6 +14,9 @@ st.set_page_config(
     page_icon="👋",
 )
 
+if "SUPER" not in st.session_state:
+    st.session_state.update({"SUPER": False})
+
 st.write("# Palm Recognition App! 👋")
 
 st.sidebar.success("Please Register your PALM before Identify!")
@@ -69,7 +72,7 @@ with st.sidebar:
 
     super_user = ast.literal_eval(os.environ["superuser"])
 
-    if os.environ["SUPER"] == "False":
+    if not st.session_state["SUPER"]:
         username = st.text_input(
             "Enter SuperUser Name 👇",
             label_visibility="visible",
@@ -90,7 +93,7 @@ with st.sidebar:
                     if password != super_user[username]:
                         st.error("Incorrect Password")
                     else:
-                        os.environ["SUPER"] = "True"
+                        st.session_state["SUPER"] = True
                         st.success("Login as SUPERUSER Successfully!!!")
                         switch_page("home")
                 else:
@@ -101,6 +104,6 @@ with st.sidebar:
         st.info("Currently Login as a SUPERMAN")
         is_logout = st.button("LOGOUT")
         if is_logout:
-            os.environ["SUPER"] = "False"
+            st.session_state["SUPER"] = False
             st.success("Logout Successfully!!!")
             switch_page("home")

@@ -26,6 +26,8 @@ if not check_load_status():
     col1, col2, col3 = st.columns([0.3, 0.3, 0.3])
     with col2:
         st.image("assets/sad_face.png")
+    if "SUPER" not in st.session_state:
+        st.session_state.update({"SUPER": False})
 else:
     in_col1, in_col2 = st.columns(2)
 
@@ -35,7 +37,7 @@ else:
     with in_col2:
         my_upload = st.camera_input("Take a picture", on_change=clear_cache)
 
-    if os.environ["SUPER"] == "True":
+    if st.session_state["SUPER"]:
         col1, col2, col3, col4 = st.columns(4)
     else:
         col1, col2 = st.columns(2)
@@ -51,7 +53,7 @@ else:
         rm_bg = remove_bg(_image=image)
         rm_bg_end = time.time()
 
-        if os.environ["SUPER"] == "True":
+        if st.session_state["SUPER"]:
             col2.write("Remove Background")
             col2.caption("elapse time: {:.3f} ms".format((rm_bg_end - rm_bg_start) * 1000))
             col2.image(rm_bg)
@@ -60,7 +62,7 @@ else:
         keypoints, keypoint_plot = detect_keypoints(rm_bg=rm_bg)
         pt_det_end = time.time()
         if keypoints is not None:
-            if os.environ["SUPER"] == "True":
+            if st.session_state["SUPER"]:
                 col3.write("Keypoint Detection")
                 col3.caption(
                     "elapse time: {:.3f} ms".format((pt_det_end - pt_det_start) * 1000)
@@ -69,7 +71,7 @@ else:
             norm_start = time.time()
             rot_angle, norm_img = normalize_img(image=rm_bg, points=keypoints)
             norm_end = time.time()
-            if os.environ["SUPER"] == "True":
+            if st.session_state["SUPER"]:
                 col4.write("Normalize: ")
                 col4.caption(
                     "elapse time: {:.3f} ms, rotate: {:.1f} deg".format(
@@ -86,7 +88,7 @@ else:
                 )
                 col2.image(norm_img)
         else:
-            if os.environ["SUPER"] == "True":
+            if st.session_state["SUPER"]:
                 col3.write("Keypoint Detection")
                 col3.warning("Fail to detect keypoints")
                 col4.write("Normalize: ")
@@ -105,7 +107,7 @@ else:
             end_ext = time.time()
 
         if feature is not None:
-            if os.environ["SUPER"] == "True":
+            if st.session_state["SUPER"]:
                 st.info(
                     "Elapse Time: {:.2f} ms".format((end_ext - start_ext) * 1000), icon="🔥"
                 )

@@ -11,8 +11,10 @@ st.set_page_config(page_title="Feature DB Management")
 st.markdown("# Manage Feature DB")
 st.divider()
 
+if "SUPER" not in st.session_state:
+    st.session_state.update({"SUPER": False})
 
-if os.environ["SUPER"] == "True":
+if st.session_state["SUPER"]:
     st.session_state["register_users"] = cache_index_users()
     options = st.multiselect("Which user to delete", st.session_state["register_users"])
     if options:
