@@ -5,7 +5,7 @@ import streamlit as st
 from PIL import Image
 from streamlit_extras.switch_page_button import switch_page
 
-from utils import detect_keypoints, feature_extract, normalize_img, remove_bg, clear_cache, check_load_status
+from utils import detect_keypoints, feature_extract, normalize_img, remove_bg, check_load_status #, clear_cache
 
 st.set_page_config(page_title="Palm Identification")
 st.markdown("# Identification")
@@ -35,7 +35,7 @@ else:
         st.write("Identify Example (Left Hand)")
         st.image("assets/right_hand_contour.png")
     with in_col2:
-        my_upload = st.camera_input("Take a picture", on_change=clear_cache)
+        my_upload = st.camera_input("Take a picture")#, on_change=clear_cache)
 
     if st.session_state["SUPER"]:
         col1, col2, col3, col4 = st.columns(4)
@@ -44,13 +44,13 @@ else:
 
     if my_upload is not None:
         imgfile = my_upload
-        image = Image.open(imgfile)
+        img = Image.open(imgfile)
         col1.write("Original Image :camera:")
         col1.caption("elapse time: 0 ms")
-        col1.image(image)
+        col1.image(img)
 
         rm_bg_start = time.time()
-        st.session_state["rm_bg"] = remove_bg(_image=image)
+        st.session_state["rm_bg"] = remove_bg(image=img)
         rm_bg_end = time.time()
 
         if st.session_state["SUPER"]:
@@ -130,36 +130,36 @@ else:
             else:
                 threshold = st.session_state["PARAMS"]["threshold"]
 
-            button_clicked_identify = st.button("Identify")
-            if button_clicked_identify:
-                start = time.time()
-                response = st.session_state["index"].query(
-                    st.session_state["feature"][0].tolist(), top_k=3, include_metadata=True
-                )
-                with st.expander("See Top 3 Meta Data"):
-                    st.write("Top 3 MetaData:")
-                    st.json(response.to_dict())
-                end = time.time()
-                if type(response["matches"][0]["metadata"]["label"]) == str:
-                    pred = response["matches"][0]["metadata"]["label"]
-                elif isinstance(response["matches"][0]["metadata"]["label"], (int, float)):
-                    pred = str(int(response["matches"][0]["metadata"]["label"]))
-                else:
-                    pred = str(response["matches"][0]["metadata"]["label"])
-                score = response["matches"][0]["score"]
-                if (score + 1) / 2 < threshold:
-                    pred = "unknown user"
-                our_str = "Identity: {}, Sim-Score: {:.2f}, Elapse Time: {:.2f} ms".format(
-                    pred.upper(), (score + 1) / 2, (end_ext - start_ext) * 1000
-                )
-                if pred == "unknown user":
-                    st.warning(our_str, icon="🔥")
-                    go_register = st.button("Go Register")
-                    if go_register:
-                        clear_cache()
-                        switch_page("register")
-                else:
-                    st.info(our_str, icon="🔥")
+            # button_clicked_identify = st.button("Identify")
+            # if button_clicked_identify:
+            start = time.time()
+            response = st.session_state["index"].query(
+                st.session_state["feature"][0].tolist(), top_k=3, include_metadata=True
+            )
+            with st.expander("See Top 3 Meta Data"):
+                st.write("Top 3 MetaData:")
+                st.json(response.to_dict())
+            end = time.time()
+            if type(response["matches"][0]["metadata"]["label"]) == str:
+                pred = response["matches"][0]["metadata"]["label"]
+            elif isinstance(response["matches"][0]["metadata"]["label"], (int, float)):
+                pred = str(int(response["matches"][0]["metadata"]["label"]))
+            else:
+                pred = str(response["matches"][0]["metadata"]["label"])
+            score = response["matches"][0]["score"]
+            if (score + 1) / 2 < threshold:
+                pred = "unknown user"
+            our_str = "Identity: {}, Sim-Score: {:.2f}, Elapse Time: {:.2f} ms".format(
+                pred.upper(), (score + 1) / 2, (end_ext - start_ext) * 1000
+            )
+            if pred == "unknown user":
+                st.warning(our_str, icon="🔥")
+                go_register = st.button("Go Register")
+                if go_register:
+                    # clear_cache()
+                    switch_page("register")
+            else:
+                st.info(our_str, icon="🔥")
                 st.balloons()
         else:
             st.error("Fail to extract features")

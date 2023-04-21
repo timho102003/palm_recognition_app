@@ -14,6 +14,9 @@ from mediapipe.tasks.python import vision
 from PIL import Image
 from rembg import remove, new_session
 
+# Define a custom hash function for SessionState
+def hash_session_state(session_state):
+    return id(session_state)
 
 @st.cache_resource
 def load_keypoint_model(asset="hand_landmarker.task"):
@@ -40,7 +43,7 @@ def load_index():
     return index
 
 
-@st.cache_data
+
 def cache_user_cnt():
     user_tot = st.session_state["index"].describe_index_stats()["total_vector_count"]
     return user_tot
@@ -66,7 +69,7 @@ def rotate_points(points, angle, center):
     return np.dot(points - center, R) + center
 
 
-@st.cache_data
+
 def detect_keypoints(rm_bg):
     image_frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=np.asarray(rm_bg))
     detection_result = st.session_state["detector"].detect(image_frame)
@@ -81,7 +84,7 @@ def detect_keypoints(rm_bg):
         annotated_image = None
     return points, annotated_image
 
-@st.cache_data
+
 def draw(img: np.ndarray, hand_landmarks_list: np.ndarray, ratio=1.0) -> np.ndarray:
     frameCopy = img.copy()
     height, width, _ = img.shape
@@ -124,17 +127,17 @@ def mp_points_to_np(point_list: List, width: float, height: float) -> np.ndarray
         points[idx, 1] = int(hand_landmarks.y * height)
     return points
 
-@st.cache_data
-def remove_bg(_image: Image, bg_color: Tuple = (255, 255, 255), ratio=1.0):
+
+def remove_bg(image: Image, bg_color: Tuple = (255, 255, 255), ratio=1.0):
     my_session = new_session(st.session_state["PARAMS"]["rmbg_model"])
-    rm_bg_img = remove(data=_image, session=my_session)  #, bgcolor=bg_color
+    rm_bg_img = remove(data=image, session=my_session)  #, bgcolor=bg_color
     # Create a new image object with a white background
     background = Image.new("RGB", rm_bg_img.size, bg_color)
     # Paste the processed image onto the white background
     background.paste(rm_bg_img, (0, 0), rm_bg_img)
     return background #rm_bg_img
 
-@st.cache_data
+
 def normalize_img(image: Image, points: np.ndarray):
     width, height = image.size
     x1, y1 = points[9, 0], points[9, 1]
@@ -170,7 +173,7 @@ def to_numpy(tensor):
         tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
     )
 
-@st.cache_data
+
 def feature_extract(img):
     test_transform = T.Compose(
         [
@@ -191,12 +194,12 @@ def feature_extract(img):
     onnx_out = ort_outs[0]
     return onnx_out
 
-def clear_cache():
-    feature_extract.clear()
-    draw.clear()
-    normalize_img.clear()
-    remove_bg.clear()
-    detect_keypoints.clear()
+# def clear_cache():
+#     feature_extract.clear()
+#     draw.clear()
+#     normalize_img.clear()
+#     remove_bg.clear()
+#     detect_keypoints.clear()
 
 def check_load_status():
     if "detector" not in st.session_state and \
