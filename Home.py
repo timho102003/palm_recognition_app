@@ -5,7 +5,7 @@ import streamlit as st
 import yaml
 from streamlit_extras.switch_page_button import switch_page
 
-from utils import cache_user_cnt, load_index, load_keypoint_model, load_model
+from utils import cache_user_cnt, load_index, load_keypoint_model, load_model, add_sidebar_logo, load_banner
 
 # TODO: Future will change to connect a database to verify if is superuser
 
@@ -17,6 +17,8 @@ st.set_page_config(
 if "SUPER" not in st.session_state:
     st.session_state.update({"SUPER": False})
 
+add_sidebar_logo("assets/katsh_logo.png")
+st.image(load_banner("assets/katsh_logo.png"), width=450)
 st.write("# Palm Recognition App! 👋")
 
 st.sidebar.success("Please Register your PALM before Identify!")

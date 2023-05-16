@@ -2,7 +2,11 @@ import pandas as pd
 import streamlit as st
 from streamlit_extras.dataframe_explorer import dataframe_explorer
 
+from utils import load_banner, add_sidebar_logo
+
 st.set_page_config(page_title="Model Performance")
+add_sidebar_logo("assets/katsh_logo.png")
+st.image(load_banner("assets/katsh_logo.png"), width=450)
 st.markdown("# Model Performance Detail")
 st.divider()
 
