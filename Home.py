@@ -17,8 +17,8 @@ st.set_page_config(
 if "SUPER" not in st.session_state:
     st.session_state.update({"SUPER": False})
 
-add_sidebar_logo("assets/katsh_logo.png")
-st.image(load_banner("assets/katsh_logo.png"), width=450)
+add_sidebar_logo("assets/customize_logo.png")
+st.image(load_banner("assets/customize_logo.png"), width=450)
 st.write("# Palm Recognition App! 👋")
 
 st.sidebar.success("Please Register your PALM before Identify!")

@@ -8,8 +8,8 @@ from streamlit_extras.switch_page_button import switch_page
 from utils import cache_index_users, load_banner, add_sidebar_logo
 
 st.set_page_config(page_title="Feature DB Management")
-add_sidebar_logo("assets/katsh_logo.png")
-st.image(load_banner("assets/katsh_logo.png"), width=450)
+add_sidebar_logo("assets/customize_logo.png")
+st.image(load_banner("assets/customize_logo.png"), width=450)
 st.markdown("# Manage Feature DB")
 st.divider()
 
